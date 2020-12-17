@@ -1,38 +1,60 @@
-const {DataTypes} = require('sequelize')
-const db = require('../db')
+const { DataTypes } = require('sequelize');
+const db = require('../db');
 
-const Product = db.define('inventory', {
+const Product = db.define('product', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: true
-  }, 
+    allowNull: true,
+  },
   category: {
-    type:DataTypes.ENUM(
-      'tops', 'bottoms', 'accessories', 'footwear', 'sleepwear', 'intimates'
+    type: DataTypes.ENUM(
+      'tops',
+      'bottoms',
+      'accessories',
+      'footwear',
+      'sleepwear',
+      'intimates'
     ),
-    allowNull: false
+    allowNull: false,
   },
   subCatetory: {
     type: DataTypes.ENUM(
-      'sweatshirts', 'hoodies', 'tees', 'leggings', 'joggers', 'shorts', 'jewelry', 'socks', 'shoes', 'boots', 'hats'
+      'sweatshirts',
+      'hoodies',
+      'tees',
+      'leggings',
+      'joggers',
+      'shorts',
+      'jewelry',
+      'socks',
+      'shoes',
+      'boots',
+      'hats'
     ),
-    allowNull: true
+    allowNull: true,
   },
   sku: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   size: {
     type: DataTypes.ENUM(
-      'xsmall', 'small', 'medium', 'large', 'xlarge', '2x', '3x', '4x'
+      'xsmall',
+      'small',
+      'medium',
+      'large',
+      'xlarge',
+      '2x',
+      '3x',
+      '4x'
     ),
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
-module.exports = Product
+module.exports = Product;

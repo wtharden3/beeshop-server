@@ -22,7 +22,7 @@ app.use('/', (req, res) => {
 });
 
 db.authenticate()
-  .then(() => db.sync()) // {force: true} to empty tables
+  .then(() => db.sync({force: true})) // {force: true} to empty tables
   .then(() => {
     //will wrap this within authenticate() method
     app.listen(process.env.PORT, () => {
