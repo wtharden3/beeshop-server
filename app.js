@@ -1,3 +1,5 @@
+require('dotenv').config(); 
+
 const express = require('express');
 const app = express();
 //bring in controllers - defaults to index.js
@@ -18,6 +20,6 @@ app.use('/', (req, res) => {
   res.send('This is the main endpoint. The store.');
 });
 
-app.listen(4040, () => {
-  console.log(`[SERVER]: Let's get it started! 😜`);
+app.listen(process.env.PORT, () => {
+  console.log(`[SERVER]: Let's get it started, in here! 😜 -- You are running on Port: ${process.env.PORT}.`);
 });
