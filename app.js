@@ -8,11 +8,7 @@ const controllers = require('./controllers')
 app.use('/user', controllers.usercontroler);
 
 //for inventory endpoints - requires authorization/validation - requires role access/restriction
-app.use('/inventory', (req, res) => {
-  res.send(
-    'This is the INVENTORY endpoint. This will be used for admin access to edit the inventory of products'
-  );
-});
+app.use('/inventory', controllers.inventorycontroller);
 
 //for order history
 app.use('/orders', (req, res) => {
