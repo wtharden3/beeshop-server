@@ -1,13 +1,11 @@
-let express = require('express');
-let app = express();
+const express = require('express');
+const app = express();
+//bring in controllers - defaults to index.js
+const controllers = require('./controllers')
 
 
 //for user endponts - requires authorization/validation
-app.use('/user', (req, res) => {
-  res.send(
-    'This is the USER endpoints. This will be used for login and signup'
-  );
-});
+app.use('/user', controllers.usercontroler);
 
 //for inventory endpoints - requires authorization/validation - requires role access/restriction
 app.use('/inventory', (req, res) => {
