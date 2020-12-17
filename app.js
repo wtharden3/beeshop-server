@@ -1,10 +1,6 @@
 let express = require('express');
 let app = express();
 
-//for store endpoints - general use that does not require authorization/validation - must be first?
-app.use('/', (req, res) => {
-  res.send('This is the main endpoint. The store.');
-});
 
 //for user endponts - requires authorization/validation
 app.use('/user', (req, res) => {
@@ -25,6 +21,11 @@ app.use('/orderhistory', (req, res) => {
   res.send(
     'This is the orderhistory endpoint that admin and regular user can view and fully interact with.'
   );
+});
+
+//for store endpoints - general use that does not require authorization/validation - must be first?
+app.use('/', (req, res) => {
+  res.send('This is the main endpoint. The store.');
 });
 
 app.listen(4040, () => {
