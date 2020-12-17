@@ -11,11 +11,7 @@ app.use('/user', controllers.usercontroler);
 app.use('/inventory', controllers.inventorycontroller);
 
 //for order history
-app.use('/orders', (req, res) => {
-  res.send(
-    'This is the ORDERS endpoint that admin and regular user can view and fully interact with.'
-  );
-});
+app.use('/orders', controllers.orderscontroler);
 
 //for store endpoints - general use that does not require authorization/validation - must be first?
 app.use('/', (req, res) => {
