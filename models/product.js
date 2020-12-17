@@ -1,23 +1,23 @@
 const {DataTypes} = require('sequelize')
 const db = require('../db')
 
-const Inventory = db.define('inventory', {
-  productName: {
+const Product = db.define('inventory', {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  productDescription: {
+  description: {
     type: DataTypes.STRING,
     allowNull: true
   }, 
-  productCategory: {
+  category: {
     type:DataTypes.ENUM(
       'tops', 'bottoms', 'accessories', 'footwear', 'sleepwear', 'intimates'
     ),
     allowNull: false
   },
-  productSubCatetory: {
+  subCatetory: {
     type: DataTypes.ENUM(
       'sweatshirts', 'hoodies', 'tees', 'leggings', 'joggers', 'shorts', 'jewelry', 'socks', 'shoes', 'boots', 'hats'
     ),
@@ -35,4 +35,4 @@ const Inventory = db.define('inventory', {
   }
 })
 
-module.exports = Inventory
+module.exports = Product

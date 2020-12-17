@@ -11,7 +11,7 @@ const controllers = require('./controllers');
 app.use('/user', controllers.usercontroler);
 
 //for inventory endpoints - requires authorization/validation - requires role access/restriction
-app.use('/inventory', controllers.inventorycontroller);
+app.use('/products', controllers.productscontroller);
 
 //for order history
 app.use('/orders', controllers.orderscontroler);

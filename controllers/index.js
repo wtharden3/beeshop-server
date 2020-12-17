@@ -4,6 +4,6 @@
 // we manage our user routes in
 module.exports = {
   usercontroler: require('./usercontroller'),
-  inventorycontroller: require('./inventorycontroller'),
+  productscontroller: require('./productscontroller'),
   orderscontroler: require('./orderscontroller')
 }
