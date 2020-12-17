@@ -1,4 +1,4 @@
-let router = require('express').Router();
+const router = require('express').Router();
 
 //protected route that only admin has access to
 router.get('/admin/all', (req, res) => {

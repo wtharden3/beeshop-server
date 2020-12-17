@@ -1,4 +1,4 @@
-let router = require('express').Router();
+const router = require('express').Router();
 
 //view all will need to be at the bottom
 router.get('/admin', (req, res) => {

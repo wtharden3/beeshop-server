@@ -1,4 +1,4 @@
-let router = require('express').Router();
+const router = require('express').Router();
 
 //get user data from user table - NOT CREATED YET
 router.get('/data', (req, res) => {
