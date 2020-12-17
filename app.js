@@ -1,12 +1,11 @@
-require('dotenv').config(); 
+require('dotenv').config();
 
 const express = require('express');
 //bring in db
 const db = require('./db');
 const app = express();
 //bring in controllers - defaults to index.js
-const controllers = require('./controllers')
-
+const controllers = require('./controllers');
 
 //for user endponts - requires authorization/validation
 app.use('/user', controllers.usercontroler);
@@ -22,7 +21,16 @@ app.use('/', (req, res) => {
   res.send('This is the main endpoint. The store.');
 });
 
-//will wrap this within authenticate() method
-app.listen(process.env.PORT, () => {
-  console.log(`[SERVER]: Let's get it started, in here! 😜 -- You are running on Port: ${process.env.PORT}.`);
-});
+db.authenticate()
+  .then(() => db.sync()) // {force: true} to empty tables
+  .then(() => {
+    //will wrap this within authenticate() method
+    app.listen(process.env.PORT, () => {
+      console.log(
+        `[SERVER]: Oh yeah! We in dis 😜 -- You are running on Port: ${process.env.PORT}.`
+      );
+    });
+  })
+  .catch(err => {
+    console.log(`[SERVER]: HOL'UP...The server down. You played yo'self 👎`)
+  })
