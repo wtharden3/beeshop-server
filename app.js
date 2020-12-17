@@ -17,9 +17,9 @@ app.use('/inventory', (req, res) => {
 });
 
 //for order history
-app.use('/orderhistory', (req, res) => {
+app.use('/orders', (req, res) => {
   res.send(
-    'This is the ORDERHISTORY endpoint that admin and regular user can view and fully interact with.'
+    'This is the ORDERS endpoint that admin and regular user can view and fully interact with.'
   );
 });
 
