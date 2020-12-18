@@ -22,7 +22,7 @@ app.use('/', (req, res) => {
 });
 
 db.authenticate()
-  .then(() => db.sync({force: true})) // {force: true} to empty tables
+  .then(() => db.sync()) // {force: true} to empty tables
   .then(() => {
     //will wrap this within authenticate() method
     app.listen(process.env.PORT, () => {
@@ -32,5 +32,5 @@ db.authenticate()
     });
   })
   .catch(err => {
-    console.log(`[SERVER]: HOL'UP...The server down. You played yo'self 👎`)
+    console.log(`[SERVER]: HOL'UP...The server's down. You played yo'self 👎`)
   })
