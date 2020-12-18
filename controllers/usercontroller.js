@@ -15,13 +15,15 @@ try{
   });
   res.status(200).json({
     User: newUser,
-    message: `Alright, You have just created your account`, 
+    message: `New Account Created`,
+    Admin: newUser.isAdmin 
   })
 
 }catch(err){
   res.status(500).json({
     error: err,
     message: "That's a no go on the user creation"
+    
   })
 }
     
