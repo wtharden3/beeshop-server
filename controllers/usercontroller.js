@@ -1,11 +1,33 @@
 const router = require('express').Router();
-const {User} = require('../models');
+const { User } = require('../models');
 
 //get user data from user table - NOT CREATED YET
-router.get('/data', (req, res) => {
-  res.send('They call me U-S no H E-R...User');
+router.post('/register', async (req, res) => {
+try{
+  const { firstName, lastName, email, password, isAdmin } = req.body;
+  //Create User
+  let newUser = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    isAdmin
+  });
+  res.status(200).json({
+    User: newUser,
+    message: `Alright, You have just created your account`, 
+  })
+
+}catch(err){
+  res.status(500).json({
+    error: err,
+    message: "That's a no go on the user creation"
+  })
+}
+    
+   
 });
 
 //export this module -- will send to index.js
 
-module.exports = router
+module.exports = router;

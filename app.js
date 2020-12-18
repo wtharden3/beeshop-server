@@ -6,7 +6,7 @@ const db = require('./db');
 const app = express();
 //bring in controllers - defaults to index.js
 const controllers = require('./controllers');
-
+app.use(express.json())
 //for user endponts - requires authorization/validation
 app.use('/user', controllers.usercontroler);
 
