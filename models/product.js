@@ -55,6 +55,10 @@ const Product = db.define('product', {
     ),
     allowNull: false,
   },
+  adminId_fk: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  }
 });
 
 module.exports = Product;

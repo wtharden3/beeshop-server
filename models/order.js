@@ -25,6 +25,10 @@ const Order = db.define('order', {
   hasShipped: {
     type: DataTypes.BOOLEAN,
     allowNull: false
+  },
+  customerId_fk: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 })
 
