@@ -57,7 +57,7 @@ const Product = db.define('product', {
   },
   adminId_fk: {
     type: DataTypes.INTEGER,
-    allowNull: true
+    allowNull: false
   }
 });
 
