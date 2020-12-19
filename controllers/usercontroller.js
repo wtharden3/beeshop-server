@@ -5,11 +5,12 @@ const { User } = require('../models');
 // we will use in register and login
 const bcrypt = require('bcryptjs');
 // the jwt module is needed for SESSION VALIDATION we will use it to create a token
-
+const jwt = require('jsonwebtoken');
 //get user data from user table - NOT CREATED YET
 router.post('/register', async (req, res) => {
   try {
     //deconstructing the req.body properties
+    //use let because these will change and const will not allow that
     let { firstName, lastName, email, password, isAdmin } = req.body;
     //Create User
     let newUser = await User.create({
@@ -28,6 +29,33 @@ router.post('/register', async (req, res) => {
     res.status(500).json({
       error: err,
       message: "That's a no go on the user creation",
+    });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  let { email, password } = req.body;
+  try {
+    //search for email - email is unique
+    let loginUser = await User.findOne({ where: { email } });
+    //if there is a email that matches the user input && compare the hashed passworde with what is in the db and see if they match
+    if (loginUser && bcrypt.compare(password, loginUser.password)) {
+      const token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60 * 24,
+      });
+      res.status(200).json({
+        message: 'Login successful! 👍',
+        user: loginUser,
+        token,
+      });
+    } else {
+      res.status(401).json({
+        message: 'Login DENIED: Credentials Incorrect 🚫',
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: "Nope! You're not getting in here!",
     });
   }
 });
