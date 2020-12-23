@@ -33,6 +33,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+//req and res have to be in this order respectively
 router.post('/login', async (req, res) => {
   let { email, password } = req.body;
   try {
@@ -40,7 +41,7 @@ router.post('/login', async (req, res) => {
     let loginUser = await User.findOne({ where: { email } });
     //if there is a email that matches the user input && compare the hashed passworde with what is in the db and see if they match
     if (loginUser && bcrypt.compare(password, loginUser.password)) {
-      const token = jwt.sign({ id: loginUser.id, email: loginUser.email}, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: loginUser.id}, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24,
       });
       res.status(200).json({
@@ -50,12 +51,12 @@ router.post('/login', async (req, res) => {
       });
     } else {
       res.status(401).json({
-        message: 'Login DENIED: Credentials Incorrect 🚫',
+        message: 'Oop, You Tried it! Login DENIED! Credentials Incorrect 🚫',
       });
     }
   } catch (err) {
     res.status(500).json({
-      error: "Nope! You're not getting in here!",
+      error: "Get outta here you filthy animal! 😡 ",
     });
   }
 });
