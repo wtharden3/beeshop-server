@@ -7,14 +7,24 @@ const app = express();
 //bring in controllers - defaults to index.js
 const controllers = require('./controllers');
 app.use(express.json())
+
+/********************
+ * Exposed routes
+ * ******************/
 //for user endponts - requires authorization/validation
 app.use('/user', controllers.usercontroler);
+
+/********************
+ * Protected routes
+ * ******************/
 
 //for inventory endpoints - requires authorization/validation - requires role access/restriction
 app.use('/products', controllers.productscontroller);
 
 //for order history
 app.use('/orders', controllers.orderscontroler);
+
+//end PROTECTED routes
 
 //for store endpoints - general use that does not require authorization/validation - must be first?
 app.use('/', (req, res) => {
