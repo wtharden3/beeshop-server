@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const db = require('../db');
 
 const Product = db.define('product', {
-  name: {
+  productName: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
@@ -22,7 +22,7 @@ const Product = db.define('product', {
     ),
     allowNull: false,
   },
-  subCatetory: {
+  subCategory: {
     type: DataTypes.ENUM(
       'sweatshirts',
       'hoodies',
