@@ -17,12 +17,14 @@ app.use('/user', controllers.usercontroler);
 /********************
  * Protected routes
  * ******************/
+//middleware for protected routes
+let validateSession = require('./middleware/validateSession')
 
 //for inventory endpoints - requires authorization/validation - requires role access/restriction
-app.use('/products', controllers.productscontroller);
+app.use('/products', validateSession, controllers.productscontroller);
 
 //for order history
-app.use('/orders', controllers.orderscontroler);
+app.use('/orders', validateSession, controllers.orderscontroler);
 
 //end PROTECTED routes
 
