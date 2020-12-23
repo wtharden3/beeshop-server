@@ -11,7 +11,7 @@ const validateSession = (req, res, next) => {
   //the token will be pulled from the authorization header of the incoming request
   const token = req.headers.authorization;
   //if not token 403-forbidden
-  console.log('token ----->', token);
+  //console.log('token ----->', token);
   if (!token) {
     return res
       .status(403)
@@ -25,7 +25,7 @@ const validateSession = (req, res, next) => {
     // secreteOrPublicKey - process.env.JWT_SECRET we are using our secret key which is store in .env
     // [options, callback] - callback fn with two parameters
     jwt.verify(token, process.env.JWT_SECRET, (err, decodeToken) => {
-      console.log('decodeToken ----->', decodeToken);
+      //console.log('decodeToken ----->', decodeToken);
       if (!err && decodeToken) {
         User.findOne({
           where: {
