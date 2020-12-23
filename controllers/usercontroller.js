@@ -40,13 +40,13 @@ router.post('/login', async (req, res) => {
     let loginUser = await User.findOne({ where: { email } });
     //if there is a email that matches the user input && compare the hashed passworde with what is in the db and see if they match
     if (loginUser && bcrypt.compare(password, loginUser.password)) {
-      const token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: loginUser.id, email: loginUser.email}, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24,
       });
       res.status(200).json({
         message: 'Login successful! 👍',
         user: loginUser,
-        token,
+        sessionToken: token,
       });
     } else {
       res.status(401).json({
