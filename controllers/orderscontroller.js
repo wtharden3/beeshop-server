@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Order } = require('../models');
+const { restore } = require('../models/user');
 
 //test
 // pop@email.com
@@ -15,7 +16,7 @@ router.post('/placeorder', (req, res) => {
     details: req.body.order.details,
     shippingFee: req.body.order.shippingFee,
     hasShipped: req.body.order.hasShipped,
-    customerId_fk: req.user.id,
+    customerId_fk: req.user.id, //based on user (association) but does not automatically associate
   };
 
   Order.create(orderEntry)
@@ -29,6 +30,27 @@ router.post('/placeorder', (req, res) => {
     );
 });
 // R - READ / GET
+//get all -admin
+router.get('/admin/orders', (req, res) => {
+  Order.findAll()
+    .then(order => {
+      if (order) {
+        res.status(200).json({ order, message: 'All of the Orders' });
+      } else {
+        res.status(500).json({ message: 'no orders found' });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ error: err, message: 'the findAll did not work' })
+    );
+});
+
+// get by userid
+router.get('/:id/orders', (req, res) => {
+  Order.findOne({ where: { id: req.params.id } }).then(myorders =>
+    res.status(200).json({ myorders, message: 'Here is a list of YOUR orders' })
+  );
+});
 // U - UPDATE / PUT
 // D - DELETE
 
