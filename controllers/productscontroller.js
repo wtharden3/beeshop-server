@@ -4,7 +4,7 @@ const { Product } = require('../models');
 // C - CREATE / POST
 router.post('/addtoinventory', (req, res) => {
   //console.log('from productcontroler-- req-->', req);
-  const orderEntry = {
+  const productEntry = {
     productName: req.body.product.productName,
     description: req.body.product.description,
     category: req.body.product.category,
@@ -14,8 +14,8 @@ router.post('/addtoinventory', (req, res) => {
     adminId_fk: req.user.id,
   };
 
-  Product.create(orderEntry)
-    .then(order => res.status(200).json(order))
+  Product.create(productEntry)
+    .then(product => res.status(200).json(product))
     .catch(err =>
       res.status(500).json({
         error: err,
@@ -42,6 +42,28 @@ router.get('/admin/inventory', (req, res) => {
     );
 });
 // U - UPDATE / PUT
+router.put('/admin/:productid', (req,res) => {
+  const updateProduct = {
+    productName: req.body.product.productName,
+    description: req.body.product.description,
+    category: req.body.product.category,
+    subCategory: req.body.product.subCategory,
+    sku: req.body.product.sku,
+    size: req.body.product.size
+  }
+
+  const query = {where: {id: req.params.productid}};
+
+  Product.update(updateProduct, query)
+  .then(product => {
+    if (product){
+      res.status(200).json({message: `${product} product(s) was/were updated`})
+    } else {
+      res.status(500).json({message: `no products were updated`})
+    }
+  })
+  .catch(err => res.status(500).json({error: err, message: 'something went wrong with the update'}))
+})
 // D - DELETE
 
 //view all will need to be at the bottom
