@@ -42,7 +42,7 @@ router.get('/admin/inventory', (req, res) => {
     );
 });
 // U - UPDATE / PUT
-router.put('/admin/:productid', (req,res) => {
+router.put('/admin/edit/:productid', (req,res) => {
   const updateProduct = {
     productName: req.body.product.productName,
     description: req.body.product.description,
@@ -65,6 +65,13 @@ router.put('/admin/:productid', (req,res) => {
   .catch(err => res.status(500).json({error: err, message: 'something went wrong with the update'}))
 })
 // D - DELETE
+router.delete('/admin/delete/:productid', (req, res) => {
+  const query = {where: {id: req.params.productid}};
+
+  Product.destroy(query)
+  .then(() => res.status(200).json({message: 'Product Deleted'}))
+  .catch(err => res.status(500).json({error: err}))
+})
 
 //view all will need to be at the bottom
 // router.get('/inventory', (req, res) => {
