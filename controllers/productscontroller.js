@@ -53,7 +53,7 @@ router.get('/inventory', (req, res) => {
     );
 });
 // U - UPDATE / PUT
-router.put('/admin/edit/:productid', validateSession, (req, res) => {
+router.put('/edit/:productid', validateSession, (req, res) => {
   const permission = ac.can(req.user.userRole).updateOwn('product');
   const updateProduct = {
     productName: req.body.product.productName,
