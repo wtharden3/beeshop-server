@@ -87,17 +87,18 @@ router.put('/edit/:productid', validateSession, (req, res) => {
   }
 });
 // D - DELETE
-router.delete('/admin/delete/:productid', validateSession, (req, res) => {
+router.delete('/delete/:productid', validateSession, (req, res) => {
+  const permission = ac.can(req.user.userRole).deleteOwn('product');
   const query = { where: { id: req.params.productid } };
 
-  Product.destroy(query)
-    .then(() => res.status(200).json({ message: 'Product Deleted' }))
-    .catch(err => res.status(500).json({ error: err }));
+  if (permission.granted) {
+    Product.destroy(query)
+      .then(() => res.status(200).json({ message: 'Product Deleted' }))
+      .catch(err => res.status(500).json({ error: err }));
+  } else {
+    res.status(500).json({ message: "You can't remove me!" });
+  }
 });
 
-//view all will need to be at the bottom
-// router.get('/inventory', (req, res) => {
-//   res.send(`I got whatcha want, I got what you need!`);
-// });
 
 module.exports = router;
