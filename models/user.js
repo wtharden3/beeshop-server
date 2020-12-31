@@ -21,8 +21,12 @@ const User = db.define('user', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  isAdmin: {
-    type: DataTypes.BOOLEAN,
+  userRole: {
+    type: DataTypes.ENUM(
+      'shopper',
+      'customer',
+      'admin'
+    ),
     allowNull: false
   }
 })

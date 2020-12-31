@@ -15,13 +15,17 @@ app.use(express.json())
 app.use('/user', controllers.usercontroler);
 
 /********************
+ * Semi-protected routes
+ * ******************/
+//for most product endpoints - requires authorization/validation -  for all product endpoints requires role access/restriction
+app.use('/products', controllers.productscontroller);
+
+/********************
  * Protected routes
  * ******************/
 //middleware for protected routes
 let validateSession = require('./middleware/validateSession')
 
-//for inventory endpoints - requires authorization/validation - requires role access/restriction
-app.use('/products', validateSession, controllers.productscontroller);
 
 //for order history
 app.use('/orders', validateSession, controllers.orderscontroler);

@@ -11,19 +11,19 @@ router.post('/register', async (req, res) => {
   try {
     //deconstructing the req.body properties
     //use let because these will change and const will not allow that
-    let { firstName, lastName, email, password, isAdmin } = req.body;
+    let { firstName, lastName, email, password, userRole } = req.body;
     //Create User
     let newUser = await User.create({
       firstName,
       lastName,
       email,
       password: bcrypt.hashSync(password, 13),
-      isAdmin,
+      userRole,
     });
     res.status(201).json({
       User: newUser,
       message: `New Account Created`,
-      Admin: newUser.isAdmin,
+      userRole: newUser.userRole,
     });
   } catch (err) {
     res.status(500).json({
