@@ -38,18 +38,46 @@ router.post('/placeorder', (req, res) => {
 });
 // R - READ / GET
 //get all -admin
-router.get('/admin/orders', (req, res) => {
-  Order.findAll()
-    .then(order => {
-      if (order) {
-        res.status(200).json({ order, message: 'All of the Orders' });
-      } else {
-        res.status(500).json({ message: 'no orders found' });
-      }
-    })
-    .catch(err =>
-      res.status(500).json({ error: err, message: 'the findAll did not work' })
-    );
+router.get('/list', (req, res) => {
+  const permission = ac.can(req.user.userRole).readAny('order');
+
+  if (permission.granted && req.user.userRole === 'admin') {
+    Order.findAll()
+      .then(order => {
+        if (order) {
+          res.status(200).json({ order, message: 'All of the Orders' });
+        } else {
+          res.status(500).json({ message: 'no orders found' });
+        }
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: err, message: 'the findAll did not work' })
+      );
+  } else if (req.user.userRole === 'customer') {
+    //this will make it so the customer can only see their own orders
+    const query = { where: { customerId_fk: req.user.id } };
+    Order.findAll(query)
+      .then(order => {
+        console.log('ORDER MANE===>', order);
+        if (order.length > 0) {
+          res
+            .status(200)
+            .json({ order, message: 'Here are all of YOUR orders' });
+        } else {
+          console.log('this');
+          res.status(500).json({ message: "You don't have any orders" });
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: err, message: "Opps, couldn't findAll your orders" });
+      });
+  } else {
+    res.status(500).json({ message: "Oh, you can't see that" });
+  }
 });
 
 // get by userid
@@ -86,12 +114,10 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
       }
     })
     .catch(err =>
-      res
-        .status(500)
-        .json({
-          error: err,
-          message: 'there was an error searching or editing the order',
-        })
+      res.status(500).json({
+        error: err,
+        message: 'there was an error searching or editing the order',
+      })
     );
 });
 // D - DELETE
