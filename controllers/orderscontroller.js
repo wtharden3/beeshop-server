@@ -80,16 +80,20 @@ router.get('/list', (req, res) => {
   }
 });
 
-// get by userid
-router.get('/:customerId/orders', (req, res) => {
-  Order.findAll({
-    where: { customerId_fk: req.params.customerId },
-  }).then(myorders =>
-    res.status(200).json({ myorders, message: 'Here is a list of YOUR orders' })
-  );
-});
+// get by userid == don't need this endpoint right now
+// router.get('/:customerId/orders', (req, res) => {
+//   Order.findAll({
+//     where: { customerId_fk: req.params.customerId },
+//   }).then(myorders =>
+//     res.status(200).json({ myorders, message: 'Here is a list of YOUR orders' })
+//   );
+// });
+
 // U - UPDATE / PUT
 router.put('/edit/:orderid', validateSession, (req, res) => {
+  const adminPermission = ac.can(req.user.userRole).updateAny('product');
+  const customerPermission = ac.can(req.user.userRole).updateOwn('product');
+
   //console.log('req----> ', req)
   const updateOrder = {
     total: req.body.order.total,
@@ -101,24 +105,50 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
   };
   //console.log('req.body.order----> ', req.body.order)
 
-  const query = { where: { id: req.params.orderid } };
-
-  Order.update(updateOrder, query)
-    .then(order => {
-      if (order) {
-        res
-          .status(200)
-          .json({ order, message: `${order} order(s) was updated` });
-      } else {
-        res.status(500).json({ message: 'there are no orders to edit' });
-      }
-    })
-    .catch(err =>
-      res.status(500).json({
-        error: err,
-        message: 'there was an error searching or editing the order',
+  if (adminPermission.granted) {
+    const query = { where: { id: req.params.orderid } };
+    Order.update(updateOrder, query)
+      .then(order => {
+        if (order) {
+          res
+            .status(200)
+            .json({ order, message: `${order} order(s) was updated` });
+        } else {
+          res.status(500).json({ message: 'there are no orders to edit' });
+        }
       })
-    );
+      .catch(err =>
+        res.status(500).json({
+          error: err,
+          message: 'there was an error searching or editing the order',
+        })
+      );
+  } else if (req.user.userRole === 'customer') {
+    console.log('this is a customer', req.user.userRole)
+    const query = {
+      where: { id: req.params.orderid, customerId_fk: req.user.id },
+    };
+    Order.update(updateOrder, query)
+      .then(order => {
+        if (order.length > 0) {
+          res
+            .status(200)
+            .json({ order, message: `${order} order(s) was updated` });
+        } else {
+          res
+            .status(500)
+            .json({ message: 'there are none of YOUR orders to edit' });
+        }
+      })
+      .catch(err =>
+        res.status(500).json({
+          error: err,
+          message: 'there was an error searching or editing YOUR order',
+        })
+      );
+  } else {
+    res.status(500).json({ message: 'no permission granted' });
+  }
 });
 // D - DELETE
 router.delete('/delete/:orderid', (req, res) => {
