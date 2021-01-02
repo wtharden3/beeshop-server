@@ -91,8 +91,8 @@ router.get('/list', (req, res) => {
 
 // U - UPDATE / PUT
 router.put('/edit/:orderid', validateSession, (req, res) => {
-  const adminPermission = ac.can(req.user.userRole).updateAny('product');
-  const customerPermission = ac.can(req.user.userRole).updateOwn('product');
+  const adminPermission = ac.can(req.user.userRole).updateAny('order');
+  //const customerPermission = ac.can(req.user.userRole).updateOwn('order');
 
   //console.log('req----> ', req)
   const updateOrder = {
@@ -152,22 +152,44 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
 });
 // D - DELETE
 router.delete('/delete/:orderid', (req, res) => {
+  const adminPermission = ac.can(req.user.userRole).deleteAny('order');
+  const customerPermission = ac.can(req.user.userRole).deleteOwn('order');
+
+  if(adminPermission.granted){
   const query = { where: { id: req.params.orderid } };
   Order.destroy(query)
     .then(() =>
-      res.status(200).json({ message: 'This order has been deleted' })
+      res.status(200).json({ message: 'This order has been deleted by the admin' })
     )
     .catch(err =>
       res
         .status(500)
         .json({ error: err, message: 'there was an error deleting this Order' })
     );
+
+  } else if(customerPermission.granted){
+    const query = {
+      where: { id: req.params.orderid, customerId_fk: req.user.id },
+    };
+  Order.destroy(query)
+    .then(deleted =>
+      res.status(200).json({ deleted, message: 'You deleted your order' })
+    )
+    .catch(err =>
+      res
+        .status(500)
+        .json({ error: err, message: 'there was an error deleting this Order' })
+    );
+  } else {
+    res.status(500).json({message: 'you cannot delete that'})
+  }
+
 });
 
 //protected route that only admin has access to
-router.get('/admin/all', (req, res) => {
-  res.send(`I'm the biggest boss that you seen thus far --Rick Ross`);
-});
+// router.get('/admin/all', (req, res) => {
+//   res.send(`I'm the biggest boss that you seen thus far --Rick Ross`);
+// });
 
 //getby userid is next
 
