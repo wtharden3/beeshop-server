@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
       userRole,
     });
     res.status(201).json({
-      User: newUser,
+      user: newUser,
       message: `New Account Created`,
       userRole: newUser.userRole,
     });
