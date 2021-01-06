@@ -1,8 +1,65 @@
 const router = require('express').Router();
-const { Product } = require('../models');
+const { Product, Img } = require('../models');
 const ac = require('../roles');
 let validateSession = require('../middleware/validateSession');
 
+// Image upload dependencies
+const aws = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3-v2');
+//need and image model?
+
+const s3 = new aws.S3();
+//end img upload dependencies
+
+//Image upload functionality
+aws.config.update({
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  region: 'us-east-2',
+});
+
+const imgUpload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.BUCKET_NAME,
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldName });
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname);
+    },
+  }),
+});
+
+router.post(
+  '/upload/img',
+  imgUpload.single('image'),
+  validateSession,
+  (req, res) => {
+    const ImgEntry = {
+      title: req.body.img.title,
+      description: req.body.post.description,
+      productId_fk: req.user.id,
+    };
+
+    if (req.user.userRole === 'admin') {
+      Img.create(ImgEntry)
+        .then(entry =>
+          res.status(200).json({ entry, message: 'Image uploaded' })
+        )
+        .catch(err =>
+          res.status(500).json({ error: err, message: 'upload failed' })
+        );
+    } else {
+      res
+        .status(500)
+        .json({
+          message: "you don't have access to upload an image for this product",
+        });
+    }
+  }
+);
 // C - CREATE / POST
 router.post('/addtoinventory', validateSession, (req, res) => {
   //console.log('from productcontroler-- req-->', req);
@@ -99,6 +156,5 @@ router.delete('/delete/:productid', validateSession, (req, res) => {
     res.status(500).json({ message: "You can't remove me!" });
   }
 });
-
 
 module.exports = router;
