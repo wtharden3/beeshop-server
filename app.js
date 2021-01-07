@@ -4,11 +4,11 @@ const express = require('express');
 //bring in db
 const db = require('./db');
 const app = express();
-app.use(require("./middleware/headers"));
 //bring in controllers - defaults to index.js
 const controllers = require('./controllers');
 app.use(express.json())
 
+app.use(require("./middleware/headers"));
 /********************
  * Exposed routes
  * ******************/

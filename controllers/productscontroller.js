@@ -93,6 +93,11 @@ router.post('/addtoinventory', validateSession, (req, res) => {
 });
 // R - READ / GET
 
+//add /inventory/:productName - no validateSession
+//add /inventyr/:category - no validateSession
+//add /inventory/:subCategory - no validateSession
+//add /inventory/:size - no validateSession
+
 //get all -- all have access
 router.get('/inventory', (req, res) => {
   Product.findAll()
@@ -143,6 +148,7 @@ router.put('/edit/:productid', validateSession, (req, res) => {
     res.status(500).json({ message: "nope! don't touch that product" });
   }
 });
+
 // D - DELETE
 router.delete('/delete/:productid', validateSession, (req, res) => {
   const permission = ac.can(req.user.userRole).deleteOwn('product');

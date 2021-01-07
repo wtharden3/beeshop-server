@@ -36,6 +36,7 @@ router.post('/placeorder', (req, res) => {
     res.status(500).json({ message: 'sorry, no window shoppers' });
   }
 });
+
 // R - READ / GET
 //get all -admin
 router.get('/list', (req, res) => {
