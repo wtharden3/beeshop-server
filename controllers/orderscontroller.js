@@ -13,12 +13,12 @@ router.post('/placeorder', (req, res) => {
   const permission = ac.can(req.user.userRole).createOwn('order');
   let orderEntry = {
     //total: (req.body.order.subTotal * req.body.order.tax) + req.body.order.subTotal + req.body.order.shippingFee,
-    total: req.body.order.total,
-    subTotal: req.body.order.subTotal,
-    tax: req.body.order.tax,
-    details: req.body.order.details,
-    shippingFee: req.body.order.shippingFee,
-    hasShipped: req.body.order.hasShipped,
+    totalCost: req.body.order.totalCost,
+    totalItems: req.body.order.totalItems,
+    // tax: req.body.order.tax,
+    // details: req.body.order.details,
+    // shippingFee: req.body.order.shippingFee,
+    // hasShipped: req.body.order.hasShipped,
     customerId_fk: req.user.id, //based on user (association) but does not automatically associate
   };
 
@@ -97,12 +97,12 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
 
   //console.log('req----> ', req)
   const updateOrder = {
-    total: req.body.order.total,
-    subTotal: req.body.order.subTotal,
-    tax: req.body.order.tax,
-    details: req.body.order.details,
-    shippingFee: req.body.order.shippingFee,
-    hasShipped: req.body.order.hasShipped,
+    totalCost: req.body.order.totalCost,
+    totalItems: req.body.order.totalItems,
+    // tax: req.body.order.tax,
+    // details: req.body.order.details,
+    // shippingFee: req.body.order.shippingFee,
+    // hasShipped: req.body.order.hasShipped,
   };
   //console.log('req.body.order----> ', req.body.order)
 

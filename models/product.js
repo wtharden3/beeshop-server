@@ -7,6 +7,19 @@ const Product = db.define('product', {
     allowNull: false,
     unique: true,
   },
+  productCost: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  // productImgFront {
+
+  // },
+  // productImgBack {
+
+  // },
+  // productImgSide {
+
+  // },
   description: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -37,10 +50,6 @@ const Product = db.define('product', {
       'hats'
     ),
     allowNull: true,
-  },
-  sku: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
   },
   size: {
     type: DataTypes.ENUM(

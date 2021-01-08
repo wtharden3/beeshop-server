@@ -15,7 +15,7 @@ const validateSession = (req, res, next) => {
     //the token will be pulled from the authorization header of the incoming request
     const token = req.headers.authorization;
     //if not token 403-forbidden
-    //console.log('token ----->', token);
+    console.log('token ----->', token);
     if (!token) {
       return res.status(403).json({
         auth: false,

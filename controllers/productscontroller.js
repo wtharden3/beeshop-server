@@ -60,6 +60,7 @@ router.post(
     }
   }
 );
+
 // C - CREATE / POST
 router.post('/addtoinventory', validateSession, (req, res) => {
   //console.log('from productcontroler-- req-->', req);
@@ -70,10 +71,10 @@ router.post('/addtoinventory', validateSession, (req, res) => {
   //Rick Boss needs to add to inventory
   const productEntry = {
     productName: req.body.product.productName,
+    productCost: req.body.product.productCost,
     description: req.body.product.description,
     category: req.body.product.category,
     subCategory: req.body.product.subCategory,
-    sku: req.body.product.sku,
     size: req.body.product.size,
     adminId_fk: req.user.id,
   };
@@ -119,10 +120,10 @@ router.put('/edit/:productid', validateSession, (req, res) => {
   const permission = ac.can(req.user.userRole).updateOwn('product');
   const updateProduct = {
     productName: req.body.product.productName,
+    productCost: req.body.product.productCost,
     description: req.body.product.description,
     category: req.body.product.category,
     subCategory: req.body.product.subCategory,
-    sku: req.body.product.sku,
     size: req.body.product.size,
   };
 
