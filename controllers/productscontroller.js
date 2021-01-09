@@ -115,6 +115,21 @@ router.get('/inventory', (req, res) => {
       res.status(500).json({ error: err, message: 'the findall did not work' })
     );
 });
+
+//find one by id
+router.get('/:productid', (req,res) => {
+  const query = {where: {id: req.params.productid}};
+  Product.findOne(query)
+  .then(product => {
+    if(product){
+      res.status(200).json({product, message: 'ok, big spender! 😉'})
+    } else {
+      res.status(500).json({message: 'oops, gotta be quicker than that. That product is not available'})
+    }
+  })
+  .catch(error => res.status(500).json({error, message: 'we could not add that item to your cart'}))
+})
+
 // U - UPDATE / PUT
 router.put('/edit/:productid', validateSession, (req, res) => {
   const permission = ac.can(req.user.userRole).updateOwn('product');
