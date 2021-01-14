@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const validateSession = require('../middleware/validateSession');
 const { Order } = require('../models');
-const ac = require('../roles');
+//const ac = require('../roles');
 //const { restore } = require('../models/user');
 
 //test
@@ -10,19 +10,22 @@ const ac = require('../roles');
 
 // C - CREATE / POST
 router.post('/placeorder', (req, res) => {
-  const permission = ac.can(req.user.userRole).createOwn('order');
+  //const permission = ac.can(req.user.userRole).createOwn('order');
+  console.log('placeorder, userRole',req.user.userRole)
+  console.log('placeorder, user.id',req.user.id)
   let orderEntry = {
     //total: (req.body.order.subTotal * req.body.order.tax) + req.body.order.subTotal + req.body.order.shippingFee,
     totalCost: req.body.order.totalCost,
     totalItems: req.body.order.totalItems,
     // tax: req.body.order.tax,
-    // details: req.body.order.details,
-    // shippingFee: req.body.order.shippingFee,
+    details: req.body.order.details,
+    shippingInfo: req.body.order.shippingInfo,
     // hasShipped: req.body.order.hasShipped,
-    customerId_fk: req.user.id, //based on user (association) but does not automatically associate
+    customerId_fk: req.user.id //based on user (association) but does not automatically associate
+    // productId_fk: req.product.id
   };
 
-  if (permission.granted) {
+  if (req.user.userRole === 'customer' || req.user.userRole === 'admin') {
     Order.create(orderEntry)
       .then(order =>
         res.status(200).json({ order, message: 'Just throw it in the bag!' })
@@ -40,9 +43,10 @@ router.post('/placeorder', (req, res) => {
 // R - READ / GET
 //get all -admin
 router.get('/list', (req, res) => {
-  const permission = ac.can(req.user.userRole).readAny('order');
-
-  if (permission.granted && req.user.userRole === 'admin') {
+  //const permission = ac.can(req.user.userRole).readAny('order');
+console.log('userRole==>', req.user.userRole)
+console.log('user==>', req.user.id)
+  if (req.user.userRole === 'admin') {
     Order.findAll()
       .then(order => {
         if (order) {
@@ -92,13 +96,16 @@ router.get('/list', (req, res) => {
 
 // U - UPDATE / PUT
 router.put('/edit/:orderid', validateSession, (req, res) => {
-  const adminPermission = ac.can(req.user.userRole).updateAny('order');
+  //const adminPermission = ac.can(req.user.userRole).updateAny('order');
   //const customerPermission = ac.can(req.user.userRole).updateOwn('order');
 
   //console.log('req----> ', req)
+  // if (req.user.userRole === 'admin' || req.user.userRole === 'customer'){
+
+  // }
   const updateOrder = {
-    totalCost: req.body.order.totalCost,
-    totalItems: req.body.order.totalItems,
+    details: req.body.order.details,
+    shippingInfo: req.body.order.shippingInfo,
     // tax: req.body.order.tax,
     // details: req.body.order.details,
     // shippingFee: req.body.order.shippingFee,
@@ -106,7 +113,7 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
   };
   //console.log('req.body.order----> ', req.body.order)
 
-  if (adminPermission.granted) {
+  if (req.user.userRole === 'admin') {
     const query = { where: { id: req.params.orderid } };
     Order.update(updateOrder, query)
       .then(order => {
@@ -153,10 +160,10 @@ router.put('/edit/:orderid', validateSession, (req, res) => {
 });
 // D - DELETE
 router.delete('/delete/:orderid', (req, res) => {
-  const adminPermission = ac.can(req.user.userRole).deleteAny('order');
-  const customerPermission = ac.can(req.user.userRole).deleteOwn('order');
+  // const adminPermission = ac.can(req.user.userRole).deleteAny('order');
+  // const customerPermission = ac.can(req.user.userRole).deleteOwn('order');
 
-  if(adminPermission.granted){
+  if(req.user.userRole === 'admin'){
   const query = { where: { id: req.params.orderid } };
   Order.destroy(query)
     .then(() =>
@@ -168,7 +175,7 @@ router.delete('/delete/:orderid', (req, res) => {
         .json({ error: err, message: 'there was an error deleting this Order' })
     );
 
-  } else if(customerPermission.granted){
+  } else if(req.user.userRole === 'customer'){
     const query = {
       where: { id: req.params.orderid, customerId_fk: req.user.id },
     };

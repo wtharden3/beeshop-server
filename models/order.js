@@ -14,14 +14,14 @@ const Order = db.define('order', {
   //   type: DataTypes.STRING,
   //   allowNull: false
   // },
-  // details: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false
-  // },
-  // shippingFee: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false
-  // },
+  details: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  shippingInfo: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   // hasShipped: {
   //   type: DataTypes.BOOLEAN,
   //   allowNull: false
